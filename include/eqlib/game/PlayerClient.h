@@ -535,7 +535,7 @@ public:
 /*0x03c5*/ char                     GM;
 /*0x03c8*/ PlayerClient*            pViewPlayer;
 /*0x03d0*/ int                      WarCry;
-/*0x03d4*/ float                    MerchantGreed;  // offset unverified for 2026-11-10 (test)
+/*0x03d4*/ float                    MerchantGreed;  // stays 1.0 on every spawn; the merchant markup is CMerchantWnd::MerchantGreed
 /*0x03d8*/ uint8_t               Unknown0x3d8[0x1];
 /*0x03d9*/ bool                     bOfflineMode;
 /*0x03dc*/ float                    RunSpeed;
@@ -600,7 +600,7 @@ public:
 /*0x0618*/ bool                     Sneak;
 /*0x0619*/ bool                     bSummoned;
 /*0x061a*/ uint8_t               Unknown0x61a[0x6];
-/*0x0620*/ unsigned int             CorpseDragCount;  // offset unverified for 2026-11-10 (test)
+/*0x0620*/ unsigned int             CorpseDragCount;  // not updated by the client when dragging (2026-11-10 test); reads 0
 /*0x0624*/ float                    ViewHeight;
 /*0x0628*/ int                      RealEstateID;
 /*0x062c*/ unsigned int             LastRangedUsedTime;

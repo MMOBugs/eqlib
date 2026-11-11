@@ -820,7 +820,7 @@ public:
 /*0x225*/ bool               bFullyScreenClipped;
 /*0x228*/ CTextureAnimation* IconTextureAnim;
 /*0x230*/ bool               bHCenterTooltip;
-/*0x234*/ uint32_t           BackgroundDrawType;  // offset unverified for 2026-11-10 (test)
+/*0x234*/ uint32_t           BackgroundDrawType;  // not used by the client (2026-11-10 test); the slot is padding
 /*0x238*/ CStaticTintedBlendAnimationTemplate* TitlePiece;
 /*0x240*/ bool               bCaptureTitle;
 /*0x244*/ COLORREF           BGColor;
