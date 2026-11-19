@@ -625,16 +625,17 @@ public:
 /*0x0fe0*/ ActorClient        mActorClient;
 /*0x11f0*/ PlayerAnimationBase* pAnimation;
 /*0x11f8*/ float              MeleeRadius;                        // used by GetMeleeRange
-/*0x11fc*/ unsigned int       CollisionCounter;
-/*0x1200*/ float              CachedFloorLocationY;
-/*0x1204*/ float              CachedFloorLocationX;
-/*0x1208*/ float              CachedFloorLocationZ;
-/*0x120c*/ float              CachedFloorHeight;
-/*0x1210*/ float              CachedCeilingLocationY;
-/*0x1214*/ float              CachedCeilingLocationX;
-/*0x1218*/ float              CachedCeilingLocationZ;
-/*0x121c*/ float              CachedCeilingHeight;
-/*0x1220*/ CCapsule           StaticCollision;
+/*0x11fc*/ int                Unknown0x11fc;
+/*0x1200*/ unsigned int       CollisionCounter;
+/*0x1204*/ float              CachedFloorLocationY;
+/*0x1208*/ float              CachedFloorLocationX;
+/*0x120c*/ float              CachedFloorLocationZ;
+/*0x1210*/ float              CachedFloorHeight;
+/*0x1214*/ float              CachedCeilingLocationY;
+/*0x1218*/ float              CachedCeilingLocationX;
+/*0x121c*/ float              CachedCeilingLocationZ;
+/*0x1220*/ float              CachedCeilingHeight;
+/*0x1224*/ CCapsule           StaticCollision;
 /*0x1240*/ ArrayClass<PhysicsEffect> mPhysicsEffects;
 /*0x1258*/ eqstd::vector<bool> PhysicsEffectsUpdated;
 /*0x1278*/
