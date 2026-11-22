@@ -50,7 +50,7 @@ enum EPlace
 	CanPlaceAndGoto,
 };
 
-constexpr size_t zoneHeader_size = 0x2A8; // @sizeof(zoneHeader) :: 2026-10-27 (test) @ 0x140ECAD24
+constexpr size_t zoneHeader_size = 0x2A8; // @sizeof(zoneHeader) :: 2026-11-19 (test) @ 0x140ED3DC4
 
 struct [[offsetcomments]] zoneHeader
 {
@@ -201,24 +201,57 @@ public:
 
 using CTargetRing DEPRECATE("Use FreeTargetTracker instead of CTargetRing") = CTargetRing;
 
+enum EQSuccessfulHitFlags : uint32_t
+{
+	SuccessfulHitFlag_WildRampage = 0x00000001,
+	SuccessfulHitFlag_Rampage = 0x00000002,
+	SuccessfulHitFlag_OverTime = 0x00000004,
+	SuccessfulHitFlag_DoubleBowShot = 0x00000008,
+	SuccessfulHitFlag_ForceSpellMsg = 0x00000010,
+	SuccessfulHitFlag_Flurry = 0x00000020,
+	SuccessfulHitFlag_Riposte = 0x00000040,
+	SuccessfulHitFlag_Critical = 0x00000080,
+	SuccessfulHitFlag_Lucky = 0x00000100,
+	SuccessfulHitFlag_FinishingBlow = 0x00000200,
+	SuccessfulHitFlag_CripplingBlow = 0x00000400,
+	SuccessfulHitFlag_Assassinate = 0x00000800,
+	SuccessfulHitFlag_DeadlyStrike = 0x00001000,
+	SuccessfulHitFlag_SlayUndead = 0x00002000,
+	SuccessfulHitFlag_Headshot = 0x00004000,
+	SuccessfulHitFlag_Strikethrough = 0x00008000,
+	SuccessfulHitFlag_LuckyRiposte = 0x00010000,
+	SuccessfulHitFlag_Twincast = 0x00020000,
+	SuccessfulHitFlag_ShieldBlock = 0x00040000,
+	SuccessfulHitFlag_StaffBlock = 0x00080000,
+	SuccessfulHitFlag_Locked = 0x00100000,
+};
 
-#pragma pack(push, 1)
-// fixme x64
+enum EQSuccessfulHealFlags : uint32_t
+{
+	SuccessfulHealFlag_OverTime = 0x00000001,
+	SuccessfulHealFlag_OverTimeChannel = 0x00000002,
+	SuccessfulHealFlag_Critical = 0x00000004,
+	SuccessfulHealFlag_Lucky = 0x00000008,
+	SuccessfulHealFlag_Twincast = 0x00000010,
+	SuccessfulHealFlag_NoLandMessageA = 0x00000020,
+	SuccessfulHealFlag_NoLandMessageB = 0x00000040,
+};
+
 struct [[offsetcomments]] EQSuccessfulHit
 {
 /*0x00*/ uint16_t      DamagedID;                // Spawn that was hit
 /*0x02*/ uint16_t      AttackerID;               // Spawn who did the hit
-/*0x04*/ uint8_t       Skill;                    // 1 HS etc...
-/*0x05*/ int           SpellID;
-/*0x09*/ int           DamageCaused;
-/*0x0d*/ float         Force;
-/*0x11*/ float         HitHeading;
-/*0x15*/ float         HitPitch;
-/*0x19*/ bool          bSecondary;
-/*0x1a*/ uint8_t       Unknown0x1A[6];
-/*0x20*/
+/*0x08*/ int64_t       DamageCaused;
+/*0x10*/ uint32_t      Flags;
+/*0x14*/ int           SpellID;
+/*0x18*/ int           SpellLevel;
+/*0x1c*/ float         Force;
+/*0x20*/ float         HitHeading;
+/*0x24*/ float         HitPitch;
+/*0x28*/ uint8_t       Skill;                    // 1 HS etc...
+/*0x29*/ bool          bSecondary;
+/*0x30*/
 };
-#pragma pack(pop)
 using pEQSuccessfulHit DEPRECATE("Use EQSuccessfulHit* instead of pEQSuccessfulHit") = EQSuccessfulHit*;
 
 struct [[offsetcomments]] EQSuccessfulHeal
@@ -226,10 +259,10 @@ struct [[offsetcomments]] EQSuccessfulHeal
 /*0x00*/ uint16_t      HealedID; // Spawn that was healed
 /*0x02*/ uint16_t      HealerID; // Spawn who did the healing
 /*0x04*/ int           SpellID;
-/*0x08*/ int           ActualHeal; // Amount that was actually healed
-/*0x0c*/ int           TotalHeal; // Amount that would have been healed if it didn't go over max HP
-/*0x10*/ uint32_t      EffectBitmask;
-/*0x14*/
+/*0x08*/ int64_t       ActualHeal; // Amount that was actually healed
+/*0x10*/ int64_t       TotalHeal; // Amount that would have been healed if it didn't go over max HP
+/*0x18*/ uint32_t      EffectBitmask;
+/*0x1c*/
 };
 using pEQSuccessfulHeal DEPRECATE("Use EQSuccessfulHeal* instead of pEQSuccessfulHeal") = EQSuccessfulHeal*;
 
@@ -315,7 +348,7 @@ struct [[offsetcomments]] EQGameOptions
 
 
 // size of EverQuestinfo is the distance from this byte to the end of the struct
-constexpr size_t EverQuestinfo_size = 0x75298; // @sizeof(EverQuestinfo) :: 2026-10-27 (test) @ 0x140ECAB30
+constexpr size_t EverQuestinfo_size = 0x75290; // @sizeof(EverQuestinfo) :: 2026-11-19 (test) @ 0x140ED3BD0
 
 struct [[offsetcomments]] EverQuestinfo
 {
@@ -331,14 +364,11 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x0002c*/ int               Render_HeightScale;
 /*0x00030*/ bool              ReadyEnterWorld;
 /*0x00031*/ bool              InsideDoMainWhileLoop;
-/*0x00032*/ uint8_t                          Unknown0x32[0x2];
 /*0x00034*/ uint32_t          Command;
 /*0x00038*/ uint8_t           SoloMode;
-/*0x00039*/ uint8_t                          Unknown0x39[0x3];
 /*0x0003c*/ int               ScreenXRes;
 /*0x00040*/ int               ScreenYRes;
 /*0x00044*/ bool              FullscreenMode;
-/*0x00045*/ uint8_t                          Unknown0x45[0x3];
 /*0x00048*/ eKeyboardMode     KeyboardMode;
 /*0x0004c*/ uint8_t           RunMode;
 /*0x0004d*/ uint8_t           MouseCntrl;
@@ -353,12 +383,10 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x00068*/ int               LastMX;
 /*0x0006c*/ int               LastMY;
 /*0x00070*/ bool              MouseInClientRect;
-/*0x00071*/ uint8_t                          Unknown0x71[0x3];
 /*0x00074*/ int               MXSensitivity;
 /*0x00078*/ int               MYSensitivity;
 /*0x0007c*/ int               MousePointerSpeedMod;
 /*0x00080*/ uint8_t           CurrentChan;
-/*0x00081*/ uint8_t                          Unknown0x81[0x3];
 /*0x00084*/ int               CurrentLang;
 /*0x00088*/ char              TellTarget[64];
 /*0x000c8*/ uint32_t          LastMinute;
@@ -368,11 +396,9 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x000cf*/ uint8_t           Strafe;
 /*0x000d0*/ bool              bNetstat;
 /*0x000d1*/ uint8_t           ModInventory;
-/*0x000d2*/ uint8_t                          Unknown0xd2[0x2];
 /*0x000d4*/ uint32_t          LastHitter;
 /*0x000d8*/ uint8_t           Harmless;
 /*0x000d9*/ uint8_t           Silenced;
-/*0x000da*/ uint8_t                          Unknown0xda[0x2];
 /*0x000dc*/ uint32_t          EventJump;
 /*0x000e0*/ uint32_t          LastJump;
 /*0x000e4*/ uint32_t          FrameTime;
@@ -385,14 +411,12 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x0010d*/ int8_t            EncumberStatus;
 /*0x0010e*/ char              PendingCharacterName[64];
 /*0x0014e*/ bool              TutorialMode;
-/*0x0014f*/ uint8_t                          Unknown0x14f[0x1];
 /*0x00150*/ uint32_t          RMouseDown;
 /*0x00154*/ uint32_t          LMouseDown;
 /*0x00158*/ char              Snooper[64];
 /*0x00198*/ uint32_t          DuelTarget;
 /*0x0019c*/ uint32_t          DuelMe;
 /*0x001a0*/ uint8_t           DuelOn;
-/*0x001a1*/ uint8_t                          Unknown0x1a1[0x3];
 /*0x001a4*/ uint32_t          AutoHelp;
 /*0x001a8*/ uint32_t          LastLocalUpdate;
 /*0x001ac*/ int               SavedPC;
@@ -415,15 +439,12 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x001f0*/ long              MyZ;
 /*0x001f4*/ zoneHeader        ZoneInfo;
 /*0x0049c*/ bool              ZDefined;
-/*0x0049d*/ uint8_t                          Unknown0x49d[0x3];
 /*0x004a0*/ int               TrackPlayers;
 /*0x004a4*/ bool              bTrackMercs;
 /*0x004a5*/ bool              bTrackPets;
-/*0x004a6*/ uint8_t                          Unknown0x4a6[0x2];
 /*0x004a8*/ int               iTrackSortType;
 /*0x004ac*/ int               iTrackFilterType;
 /*0x004b0*/ int               UsingSkill;
-/*0x004b4*/ int               MultiItemSelectKey;  // GUESS
 /*0x004b8*/ void*             UsingSkillTarget;
 /*0x004c0*/ int64_t           LimboMoney[4];
 /*0x004e0*/ uint32_t          LimboMoneyBonus;
@@ -443,7 +464,6 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x004f4*/ bool              bIsPressedAlt;
 /*0x004f5*/ bool              bIsPressedLAlt;
 /*0x004f6*/ bool              bIsPressedRAlt;
-/*0x004f7*/ uint8_t                          Unknown0x4f7[0x1];
 /*0x004f8*/ int               Currkeypress;
 /*0x004fc*/ int               RateUp;
 /*0x00500*/ int               RateDown;
@@ -454,10 +474,8 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x00514*/ bool              bRpServer;
 /*0x00515*/ bool              bAcceleratedServer;
 /*0x00516*/ bool              bProgressionServer;
-/*0x00517*/ uint8_t                          Unknown0x517[0x1];
 /*0x00518*/ int64_t           ProgressionOpenExpansions;             // EQExpansionOwned
 /*0x00520*/ bool              bHeroicCharacterFlag;
-/*0x00521*/ uint8_t                          Unknown0x521[0x3];
 /*0x00524*/ int               ProgressionLevelCap;                   // Level Cap for Vaniki server
 /*0x00528*/ bool              bCanUseAllClasses;
 /*0x00529*/ bool              bCanUseAllDeities;
@@ -476,7 +494,6 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x00537*/ bool              bCanCreateHeroicCharacter;
 /*0x00538*/ int               nMonthlyClaim;                         // maybe, needs verification.
 /*0x0053c*/ bool              MarketPlaceRelated;                    // also maybe, related to marketplace
-/*0x0053d*/ uint8_t                          Unknown0x53d[0x3];
 /*0x00540*/ int               Heroic50Slots;
 /*0x00544*/ int               Heroic85Slots;
 /*0x00548*/ int               Heroic100Slots;
@@ -484,7 +501,6 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x00550*/ bool              bAutoIdentify;
 /*0x00551*/ bool              bNameGen;
 /*0x00552*/ bool              bGibberish;
-/*0x00553*/ uint8_t                          Unknown0x553[0x1];
 /*0x00554*/ int               Locale;
 /*0x00558*/ uint8_t           UpdateControlled;
 /*0x00559*/ uint8_t           UpdateLocal;
@@ -492,57 +508,47 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x0055b*/ uint8_t           ExitGame;
 /*0x0055c*/ int               EnterZoneReason;
 /*0x00560*/ bool              UseVoiceMacros;
-/*0x00561*/ uint8_t                          Unknown0x561[0x3];
 /*0x00564*/ float             StrafeRate;
 /*0x00568*/ float             MoveDownSpeed;
 /*0x0056c*/ char              Motd[1024];
 /*0x0096c*/ EQZoneIndex       ZoneID;
 /*0x00970*/ bool              PrimaryAttackReady;
 /*0x00971*/ bool              SecondaryAttackReady;
-/*0x00972*/ uint8_t                          Unknown0x972[0x2];
 /*0x00974*/ uint32_t          AutosaveCounter;
 /*0x00978*/ uint32_t          StartAFK;
 /*0x0097c*/ uint8_t           MyVehicleFound;
 /*0x0097d*/ uint8_t           ZoneFindingVehicle;
 /*0x0097e*/ uint8_t           ForceSendVehicleUpdate;
-/*0x0097f*/ uint8_t                          Unknown0x97f[0x1];
 /*0x00980*/ ZONE_REQ_STATUS   GotSafeCoords;
 /*0x00984*/ int               ZoningTo;
 /*0x00988*/ char              AFKMessage[256];
 /*0x00a88*/ bool              bLogging;
 /*0x00a89*/ char              LogFile[50];
-/*0x00abb*/ uint8_t                          Unknown0xabb[0x1];
 /*0x00abc*/ uint16_t          LogInterval;
 /*0x00abe*/ uint8_t           Controlled;
-/*0x00abf*/ uint8_t                          Unknown0xabf[0x1];
 /*0x00ac0*/ uint64_t          ExpansionsFlagBitmask;                 // EQExpansionOwned
 /*0x00ac8*/ bool              NoNameApprove;
 /*0x00ac9*/ bool              AttackOnAssist;
 /*0x00aca*/ bool              LoadedArmor[7];
 /*0x00ad1*/ bool              bShowDynamicLights;
-/*0x00ad2*/ uint8_t                          Unknown0xad2[0x2];
 /*0x00ad4*/ int               iChatFontSize;
 /*0x00ad8*/ bool              bShowGrass;
 /*0x00ad9*/ bool              bInspectOthers;
 /*0x00ada*/ bool              bShowSpellEffects;
-/*0x00adb*/ uint8_t                          Unknown0xadb[0x1];
 /*0x00adc*/ float             TimeScale;
 /*0x00ae0*/ int               iShowNamesLevel;
 /*0x00ae4*/ bool              bCombatMusic;
-/*0x00ae5*/ uint8_t                          Unknown0xae5[0x3];
 /*0x00ae8*/ int               iSoundMixAhead;
 /*0x00aec*/ bool              bDisableDrakkinTattoos;
-/*0x00aed*/ uint8_t                          Unknown0xaed[0x33];
+/*0x00af0*/ int               UnknownAC0[12];
 /*0x00b20*/ bool              LegacyCharactersRuleset;
-/*0x00b21*/ uint8_t                          Unknown0xb21[0x3];
 /*0x00b24*/ uint32_t          NumMaxCharacters;
 /*0x00b28*/ uint32_t          LegacyExperienceBonus;
 /*0x00b2c*/ int               NumAvailablePersonas;
 /*0x00b30*/ int               HasDarkElfRanger;
-/*0x00b34*/ uint8_t                          Unknown0xb34[0x1];
+/*0x00b34*/ bool              UnknownB1C;
 /*0x00b35*/ bool              ModifiedSpellReqs;                     // Vaniki
 /*0x00b36*/ bool              ModifiedItemReqs;                      // Vaniki, Fangbreaker
-/*0x00b37*/ uint8_t                          Unknown0xb37[0x1];
 /*0x00b38*/ int               bHideAFK;
 /*0x00b3c*/ int               bHideAFKPets;
 /*0x00b40*/ int               bHideFamiliars;
@@ -564,7 +570,6 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x00c74*/ EQGameOptions     gOpt;
 /*0x00d1c*/ bool              noSafeDrop;
 /*0x00d1d*/ bool              lootNoDrop;
-/*0x00d1e*/ uint8_t                          Unknown0xd1e[0x2];
 /*0x00d20*/ uint32_t          AugmentPrompts;                        // 0,1,2 -> off,on,perfected only
 /*0x00d24*/ bool              bEnvSounds;
 /*0x00d25*/ bool              bAllowContextMenus;
@@ -579,20 +584,16 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x00d2e*/ bool              bResetUIToDefault;
 /*0x00d2f*/ bool              bAutoShowRewardsWindow;
 /*0x00d30*/ bool              bAllowPreLuclinMountRiders;
-/*0x00d31*/ uint8_t                          Unknown0xd31[0x7];
 /*0x00d38*/ EQCamera*         cameras[EQ_MAX_CAMERAS];
 /*0x00d78*/ bool              keyDown[nEQMappableCommands];
 /*0x00fa1*/ char              LastTellFromList[NUM_REPLY_NAMES][EQ_MAX_NAME];
-/*0x01c21*/ uint8_t                          Unknown0x1c21[0x3];
 /*0x01c24*/ int               LastTellFromIndex;
 /*0x01c28*/ char              LockPassword[64];
 /*0x01c68*/ bool              bLoadFriendsList;
-/*0x01c69*/ uint8_t                          Unknown0x1c69[0x3];
 /*0x01c6c*/ int               Unknown0x001;
 /*0x01c70*/ int               Unknown0x002;
 /*0x01c74*/ bool              Unknown0x003[2];
 /*0x01c76*/ bool              bDisableFocusEffects;
-/*0x01c77*/ uint8_t                          Unknown0x1c77[0x1];
 /*0x01c78*/ ClaimDataCollection ClaimPrizeData;
 /*0x01c90*/ ArrayClass<ChatBufferEntry*> chatBuffer;
 /*0x01ca8*/ char              WorldServerShortname[64];
@@ -604,7 +605,6 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x282c8*/ int8_t            socialIndex;
 /*0x282c9*/ bool              bHotButtonChanged[NUM_HOTBUTTON_WINDOWS][NUM_HOTBUTTON_PAGES][HOTBUTTONS_PER_PAGE];
 /*0x287f1*/ int8_t            hotBank[NUM_HOTBUTTON_WINDOWS];
-/*0x287fc*/ uint8_t                          Unknown0x287fc[0x4];
 /*0x28800*/ HotButtonData     hotButtons[NUM_HOTBUTTON_WINDOWS][NUM_HOTBUTTON_PAGES][HOTBUTTONS_PER_PAGE];
 /*0x66600*/ SpellLoadout      spellLoadouts[NUM_SPELL_SETS];
 /*0x66fd8*/ HotButtonLoadout  hotbuttonLoadouts[NUM_HOTBUTTON_SETS];
@@ -612,7 +612,6 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x69df0*/ TargetSetLoadout  targetSetLoadouts[NUM_XTARGET_SETS];
 /*0x750e2*/ char              InspectText[256];
 /*0x751e2*/ bool              bInviteOn;
-/*0x751e3*/ uint8_t                          Unknown0x751e3[0x1];
 /*0x751e4*/ float             fSpellParticleDensity;
 /*0x751e8*/ float             fSpellParticleOpacity;
 /*0x751ec*/ float             fSpellParticleNearClipPlane;
@@ -626,13 +625,11 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x7520c*/ int               nActorParticleCastFilters;
 /*0x75210*/ int               nActorNewArmorFilters;
 /*0x75214*/ bool              bCreateGroupRequested;
-/*0x75215*/ uint8_t                          Unknown0x75215[0x3];
 /*0x75218*/ int               GroupRequestId;
 /*0x7521c*/ char              Inviter[EQ_MAX_NAME];
 /*0x7525c*/ bool              FirstTime;
 /*0x7525d*/ bool              FirstTimePreMainLoop;
 /*0x7525e*/ bool              bHeroicUpgradeWarnDisplay;  // related to string id 796
-/*0x7525f*/ uint8_t                          Unknown0x7525f[0x1];
 /*0x75260*/ double            UiScale;
 /*0x75268*/ float             TributeMod1;
 /*0x7526c*/ float             TributeMod2;
@@ -643,13 +640,11 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x7527a*/ bool              bSendMultiItemWarning;
 /*0x7527b*/ bool              bAutoAttack;
 /*0x7527c*/ bool              bAutoRangeAttack;
-/*0x7527d*/ uint8_t                          Unknown0x7527d[0x3];
 /*0x75280*/ int               ItemPending;
 /*0x75284*/ int               RequestPending;
 /*0x75288*/ uint32_t          ItemPendingTime;
 /*0x7528c*/ uint32_t          RequestPendingTime;
-/*0x75290*/ uint8_t                          Unknown0x75290[0x4];
-/*0x75294*/
+/*0x75290*/
 };
 
 SIZE_CHECK(EverQuestinfo, EverQuestinfo_size);
@@ -699,48 +694,52 @@ inline namespace deprecated {
 	using PETITIONSTATUS DEPRECATE("Use PetitionStatus instead of PETITIONSTATUS") = PetitionStatus;
 }
 
+
+constexpr size_t CharSelectInfo_size = 0x170; // @sizeof(CharSelectInfo) :: 2026-11-19 (test) @ 0x14022AF4A
+
 struct [[offsetcomments]] CharSelectInfo
 {
-/*0x000*/ char         Name[0x40];
-/*0x040*/ int          Class;
-/*0x044*/ int          Race;
-/*0x048*/ BYTE         Level;
-/*0x04c*/ int          Class2;
-/*0x050*/ int          Race2;
-/*0x054*/ int          CurZoneID;
-/*0x058*/ BYTE         Sex;
-/*0x059*/ BYTE         Face;
+/*0x000*/ char            Name[0x40];
+/*0x040*/ int             Class;
+/*0x044*/ int             Race;
+/*0x048*/ BYTE            Level;
+/*0x04c*/ int             Class2;
+/*0x050*/ int             Race2;
+/*0x054*/ int             CurZoneID;
+/*0x058*/ BYTE            Sex;
+/*0x059*/ BYTE            Face;
 /*0x05c*/ ArmorProperties ArmProp[9];
-/*0x110*/ DWORD        Tint[9];
-/*0x134*/ char         TextureType;
-/*0x135*/ char         ArmorMaterial;
-/*0x136*/ char         ArmorVariation;
-/*0x137*/ char         HeadType;
-/*0x138*/ int          TattooIndex;
-/*0x13c*/ int          FacialAttachmentIndex;
-/*0x140*/ int          Deity;
-/*0x144*/ int          PrimActor;
-/*0x148*/ int          SecdActor;
-/*0x14c*/ BYTE         HairColor;
-/*0x14d*/ BYTE         BeardColor;
-/*0x14e*/ BYTE         LeftEye;
-/*0x14f*/ BYTE         RightEye;
-/*0x150*/ BYTE         Hair;
-/*0x151*/ BYTE         Beard;
-/*0x152*/ bool         bCanGoHome;
-/*0x153*/ bool         bCanTutorial;
-/*0x154*/ int          ParentId;
-/*0x158*/ bool         bTooHighLevel;
-/*0x159*/ bool         bPreFTP;
-/*0x15c*/ int          LastLogin;
-/*0x160*/ bool         bUseable;
-/*0x161*/ bool         bHeroicCharacter;
-/*0x162*/ bool         bShrouded;
-/*0x164*/ int          Unknown0x164;
-/*0x168*/ int          Unknown0x168;
-/*0x16c*/ int          Unknown0x16c;
+/*0x110*/ DWORD           Tint[9];
+/*0x134*/ char            TextureType;
+/*0x135*/ char            ArmorMaterial;
+/*0x136*/ char            ArmorVariation;
+/*0x137*/ char            HeadType;
+/*0x138*/ int             TattooIndex;
+/*0x13c*/ int             FacialAttachmentIndex;
+/*0x140*/ int             Deity;
+/*0x144*/ int             PrimActor;
+/*0x148*/ int             SecdActor;
+/*0x14c*/ BYTE            HairColor;
+/*0x14d*/ BYTE            BeardColor;
+/*0x14e*/ BYTE            LeftEye;
+/*0x14f*/ BYTE            RightEye;
+/*0x150*/ BYTE            Hair;
+/*0x151*/ BYTE            Beard;
+/*0x152*/ bool            bCanGoHome;
+/*0x153*/ bool            bCanTutorial;
+/*0x154*/ int             ParentId;
+/*0x158*/ bool            bTooHighLevel;
+/*0x159*/ bool            bPreFTP;
+/*0x15c*/ int             LastLogin;
+/*0x160*/ bool            bUseable;
+/*0x162*/ uint16_t        HeroicType;
+/*0x164*/ bool            bShrouded;
+/*0x168*/ int64_t         Unknown0x168;
 /*0x170*/
 };
+
+SIZE_CHECK(CharSelectInfo, CharSelectInfo_size)
+
 
 inline namespace deprecated {
 	using CSINFO DEPRECATE("Use CharSelectInfo instead of CSINFO") = CharSelectInfo;
@@ -756,7 +755,7 @@ public:
 };
 
 
-constexpr size_t CEverQuest_size = 0x19710; // @sizeof(CEverQuest) :: 2026-11-10 (test) @ 0x14035A3C3
+constexpr size_t CEverQuest_size = 0x19710; // @sizeof(CEverQuest) :: 2026-11-19 (test) @ 0x1403607F4
 
 class [[offsetcomments]] CEverQuest : public CEverQuestBase, public UniversalChatProxyHandler, public PopDialogHandler
 {
