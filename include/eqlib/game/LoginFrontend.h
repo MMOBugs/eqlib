@@ -676,14 +676,14 @@ public:
 /*0x040*/ bool               bHCenterTooltip;
 /*0x048*/ ControllerBase*    pController;
 /*0x050*/ uint32_t           TransitionStartTick;
-/*0x054*/ bool               bClickThrough;
+/*0x054*/ bool               bClickThroughMenuItemStatus;
 /*0x058*/ int                HScrollPos;
 /*0x05c*/ bool               Enabled;
 /*0x060*/ CXWnd*             FocusProxy;
 /*0x068*/ uint8_t            TargetAlpha;
 /*0x069*/ bool               bMaximizable;
 /*0x06a*/ bool               bClipToParent;
-/*0x06b*/ bool               bClickThroughMenuItemStatus;
+/*0x06b*/ uint8_t            Unknown_0x6b[0x1];
 /*0x06c*/ uint32_t           LastTimeMouseOver;
 /*0x070*/ CXSize             MinClientSize;
 /*0x078*/ uint32_t           XMLIndex;
@@ -696,6 +696,7 @@ public:
 /*0x099*/ bool               bEscapableLocked;
 /*0x0a0*/ CStaticTintedBlendAnimationTemplate* TitlePiece;
 /*0x0a8*/ uint8_t            FadeToAlpha;
+/*0x0a9*/ bool               bMaximized;
 /*0x0ac*/ uint32_t           BGType;
 /*0x0b0*/ int                ZLayer;
 /*0x0b4*/ bool               bRightAnchoredToLeft;
@@ -753,7 +754,7 @@ public:
 /*0x1e8*/ ArrayClass2<uint32_t> RuntimeTypes;
 /*0x208*/ bool               bLeftAnchoredToLeft;
 /*0x20c*/ COLORREF           BGColor;
-/*0x210*/ bool               bMaximized;
+/*0x210*/ bool               bClickThrough;
 /*0x211*/ bool               bTopAnchoredToTop;
 /*0x214*/ int                RightOffset;
 /*0x218*/ int                managerArrayIndex;

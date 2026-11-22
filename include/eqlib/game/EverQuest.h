@@ -586,7 +586,7 @@ struct [[offsetcomments]] EverQuestinfo
 /*0x00d30*/ bool              bAllowPreLuclinMountRiders;
 /*0x00d38*/ EQCamera*         cameras[EQ_MAX_CAMERAS];
 /*0x00d78*/ bool              keyDown[nEQMappableCommands];
-/*0x00fa1*/ char              LastTellFromList[NUM_REPLY_NAMES][EQ_MAX_NAME];
+/*0x00fa2*/ char              LastTellFromList[NUM_REPLY_NAMES][EQ_MAX_NAME];
 /*0x01c24*/ int               LastTellFromIndex;
 /*0x01c28*/ char              LockPassword[64];
 /*0x01c68*/ bool              bLoadFriendsList;
